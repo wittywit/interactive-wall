@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Azotec Wall Install</title>
+<title>Studio Poetics Touch Wall Simulator</title>
 <style>
 :root{--paper:#eef2f5;--ink:#111c27;--mute:#4d5c6b;--rule:#c2cbd4;--copper:#2c4a66;--blue:#3f7cac;--red:#111c27;--green:#2c4a66}
 *{box-sizing:border-box}
@@ -57,15 +57,9 @@ svg text{font:600 13px Menlo,"SF Mono",monospace;fill:var(--ink)}
   <div id="stage"><div class="hint">drag to orbit, scroll to zoom, right-drag to pan</div></div>
   <aside>
     <h1>Seven touch plates, one wall</h1>
-    <p class="sub">14 ft wall, 8 ft high, 4 in copper plates at 4.5 ft, 2 ft apart. Adult 5 ft 9 in and child 4 ft for scale.</p>
-
-    <h2>Wiring option</h2>
-    <label class="opt on" id="oA"><input type="radio" name="m" value="A" checked>
-      <div><b>A. Stamp behind each plate</b><span>Plate to stamp lead is about 2 in. Three thin wires run to the carrier: 3V3, OUT, GND.</span></div></label>
-    <label class="opt" id="oB"><input type="radio" name="m" value="B">
-      <div><b>B. Stamps on the carrier</b><span>Each plate gets a single-core shielded sense cable all the way to the carrier. Centre wire to the plate, shield to GND at the stamp end only.</span></div></label>
-
+    <p class="sub">14 ft wall, 8 ft high. A 4 in copper plate sits behind each hand icon of wall.svg, 1.8 ft apart. Each CAP1203 module serves 3 plates and sends I2C to the carrier at the bottom of the wall.</p>
     <label class="chk"><input type="checkbox" id="see" checked> See inside the wall</label>
+    <label class="chk"><input type="checkbox" id="xr" checked> See plates through the vinyl</label>
     <label class="chk"><input type="checkbox" id="ppl" checked> Show people</label>
 
     <h2>Wall vinyl</h2>
@@ -74,28 +68,28 @@ svg text{font:600 13px Menlo,"SF Mono",monospace;fill:var(--ink)}
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 16V4M7 9l5-5 5 5M4 20h16"/></svg>
         Import SVG, PNG or JPG</label>
       <button id="vx" type="button" disabled>Remove</button>
-      <label><span>Width <output id="vwo">6.0</output> ft</span><input type="range" id="vw" min="0.5" max="14" step="0.1" value="6"></label>
+      <label><span>Width <output id="vwo">14.0</output> ft</span><input type="range" id="vw" min="0.5" max="14" step="0.1" value="14"></label>
       <label><span>Across <output id="vxo">7.0</output> ft</span><input type="range" id="vxp" min="0" max="14" step="0.05" value="7"></label>
-      <label><span>Height <output id="vyo">4.0</output> ft</span><input type="range" id="vyp" min="0" max="8" step="0.05" value="4"></label>
-      <label><span>Opacity <output id="vao">100</output>%</span><input type="range" id="va" min="10" max="100" step="5" value="100"></label>
-      <p class="hint">Sits on the front face, under the plates. Plates and wires stay on top.</p>
+      <label><span>Height <output id="vyo">4.6</output> ft</span><input type="range" id="vyp" min="0" max="8" step="0.05" value="4.6"></label>
+      <label><span>Opacity <output id="vao">45</output>%</span><input type="range" id="va" min="10" max="100" step="5" value="45"></label>
+      <p class="hint">wall.svg loads by default. Plates sit behind it, under each hand icon.</p>
     </div>
 
     <ul class="legend">
-      <li><i style="background:#e0182d"></i>3V3</li><li><i style="background:#12a150"></i>OUT</li><li><i style="background:#000"></i>GND</li><li><i style="background:#1a5fe0"></i>sense lead</li><li><i style="background:#8a9aa8"></i>shield (B only)</li>
+      <li><i style="background:#1a5fe0"></i>sense lead (plate to module)</li><li><i style="background:#8a9aa8"></i>6-core shielded cable to carrier</li>
     </ul>
 
     <h2>Per electrode (click a row)</h2>
-    <table id="tbl"><thead><tr><th>Plate</th><th>Sense lead</th><th>Cable run</th><th>Sense C on sense node*</th></tr></thead><tbody></tbody></table>
-    <p class="note">* Typical shielded cable, about 30 pF per foot (100 pF per metre). A finger adds only a few pF, so the sense node should stay in the tens of pF. Check the Cx limit in the QT1010 and IQS227D datasheets.</p>
+    <table id="tbl"><thead><tr><th>Plate</th><th>Module</th><th>Lead</th><th>Cable</th><th>C*</th></tr></thead><tbody></tbody></table>
+    <p class="note">* Sense lead estimated at 30 pF per foot. CAP1203 base capacitance range is 5 to 50 pF per channel (datasheet). Red means over 50 pF. The cable carries I2C only, so its length does not load the plates.</p>
 
     <h2>Connection</h2>
     <div id="diag"></div>
 
     <h2>Notes</h2>
-    <p>Stamps are drawn about 3x larger than real so you can see them. People are scaled models, standing 2 to 3 ft from the wall.</p>
-    <p>The adult reaches the plates at about chest height. A 4 ft child needs to raise a hand to reach 4.5 ft.</p>
-    <p>Option A: the stamp GND wire is the ground reference, it goes back to the carrier GND. Option B: the shield is tied to stamp GND at the stamp end only. The plate end of the shield stays open, so the shield cannot form a ground loop or load the plate.</p><p>Do not ring the plate with ground, that lowers sensitivity. To ignore what is behind the wall, put a ground foil behind the plate with a gap.</p>
+    <p>Module 1 serves E1 to E3, module 2 serves E4 to E6, module 3 serves E7 (two channels spare). Mux channel 4 and its terminal J7 stay free. Each module sits behind its middle plate.</p>
+    <p>Each module cable has 6 conductors: 3V3, GND, SDA, SCL, INT, SHIELD. The shield is tied to GND by a 0R link at the carrier end only. Module 1 goes to J4, module 2 to J5, module 3 to J6.</p>
+    <p>The carrier is true size (125 x 56 mm) and sits inside the wall. Modules are drawn about 3x. People are scaled models, standing 2 to 3 ft from the wall. Do not ring a plate with ground, that lowers sensitivity.</p>
   </aside>
 </div>
 
@@ -106,11 +100,13 @@ import {OrbitControls} from './lib/OrbitControls.js';
 import {GLTFLoader} from './lib/GLTFLoader.js';
 import * as SU from './lib/SkeletonUtils.js';
 
-const N=7, WALL_W=14, WALL_H=8, PLATE_Y=4.5, PLATE=4/12, BOXY=7.0;
-const px=i=>1+2*i;                    // plate x, ft
-const bx=i=>0.45+0.15*i;              // carrier slot x, ft
-const rowY=i=>6.0+0.1*i;              // cable run height inside wall
-let mode='A', sel=0;
+const N=7, WALL_W=14, WALL_H=8, PLATE=4/12;
+const SVGW=11680.11, SVGH=5665.74, VW=14, VH=VW*SVGH/SVGW, VCX=7, VCY=WALL_H-VH/2;   // vinyl 14 ft wide, top flush with wall top
+const HX=[1322.22,2835.05,4347.89,5860.73,7373.56,8886.4,10399.24], HY=3681.84;       // hand circle centres in wall.svg
+const px=i=>HX[i]/SVGW*VW;
+const PLATE_Y=VCY+VH/2-HY/SVGH*VH;
+const MOD=i=>Math.floor(i/3);        // module serving plate i
+let sel=0;
 
 const stage=document.getElementById('stage');
 const renderer=new THREE.WebGLRenderer({antialias:true});
@@ -119,11 +115,11 @@ renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 stage.appendChild(renderer.domElement);
 const scene=new THREE.Scene(); scene.background=new THREE.Color(0xeef2f5);
 scene.fog=new THREE.Fog(0xeef2f5,40,90);
-const cam=new THREE.PerspectiveCamera(40,1,0.1,200);
+const cam=new THREE.PerspectiveCamera(40,1,0.02,1000);
 cam.position.set(8.5,4.6,25); 
 const ctl=new OrbitControls(cam,renderer.domElement);
 ctl.target.set(7,3.6,0); ctl.enableDamping=true; ctl.maxPolarAngle=Math.PI*0.52;
-ctl.minDistance=4; ctl.maxDistance=40;
+ctl.minDistance=0.05; ctl.maxDistance=400;
 
 scene.add(new THREE.HemisphereLight(0xffffff,0xc9d3dc,2.3));
 const sun=new THREE.DirectionalLight(0xffffff,2.4); sun.position.set(6,14,12);
@@ -154,32 +150,34 @@ const hitMat=new THREE.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:
 const shieldMat=new THREE.MeshStandardMaterial({color:0x8a9aa8,metalness:.6,roughness:.4,transparent:true,opacity:.45,depthWrite:false});
 const dark=new THREE.MeshStandardMaterial({color:0x2a3440,roughness:.8});
 
-const plates=[],stamps=[],cableGroup=new THREE.Group(); scene.add(cableGroup);
+const plates=[],cableGroup=new THREE.Group(); scene.add(cableGroup);
+const PZ=-0.03;   // plates sit just behind the wall face, so behind the vinyl
 for(let i=0;i<N;i++){
   const p=new THREE.Mesh(new THREE.BoxGeometry(PLATE,PLATE,0.02),cuMat);
-  p.position.set(px(i),PLATE_Y,0.011); p.castShadow=true; p.userData.i=i; scene.add(p); plates.push(p);
-  const s=new THREE.Group(); scene.add(s); stamps.push(s);
+  p.position.set(px(i),PLATE_Y,PZ); p.castShadow=true; p.userData.i=i; scene.add(p); plates.push(p);
 }
-// real carrier (carrier_devkit_8x8) and stamp models exported from KiCad, metres, shown 4x
-const CS=4, SC=3.2808*CS, CX0=0.35, TOPY=7.4, FACEZ=0.06;
-const slotX=k=>CX0+(0.008+0.013*k)*SC, slotY=TOPY-0.008*SC, STAMP_LEN=0.033*SC;
-let stampSrc=null;
-function applyStamp(i){
-  const s=stamps[i]; s.clear(); if(!stampSrc) return;
-  const m=SU.clone(stampSrc); m.traverse(o=>{if(o.isMesh)o.castShadow=true;});
-  if(mode==='A'){ m.scale.setScalar(3.2808*3); m.rotation.x=Math.PI/2; }
-  else { m.scale.setScalar(SC); m.rotation.y=Math.PI; }
-  s.add(m);
-}
+// carrier_devkit_cap1203 from KiCad (metres), true size, hidden inside the wall behind the vinyl, lying flat at the bottom of the wall
+const CS=1, SC=3.2808*CS, K=0.001*SC, FACEZ=-0.08, CPX=6.8, CPY=0.9;
+const TERM=[[19.75,6],[44.75,6],[19.75,50],[44.75,50]];          // J4..J7 centres, mm on the board
+const tw=(xm,ym)=>new THREE.Vector3(CPX+xm*K,CPY-ym*K,FACEZ);   // board mm to world (board rotated -90 deg)
 const gl=new GLTFLoader();
-gl.load('./lib/carrier_devkit_8x8.glb',g=>{
-  const c=g.scene; c.scale.setScalar(SC); c.rotation.x=Math.PI/2; c.position.set(CX0,TOPY,FACEZ);
-  c.traverse(o=>{if(o.isMesh){o.castShadow=true;}}); scene.add(c);
-  c.updateMatrixWorld(true); {const b=new THREE.Box3().setFromObject(c); c.position.z+=FACEZ-b.min.z; }  // keep the whole board in front of the wall face
+gl.load('./lib/carrier_devkit_cap1203.glb',g=>{
+  const grp=new THREE.Group(), c=g.scene; c.scale.setScalar(SC); c.rotation.x=Math.PI/2; grp.add(c); scene.add(grp);
+  c.traverse(o=>{if(o.isMesh)o.castShadow=true;});
+  grp.updateMatrixWorld(true); const b=new THREE.Box3().setFromObject(c); c.position.z-=b.min.z; const hz=b.max.z-b.min.z; grp.userData.hz=hz;
+  grp.position.set(CPX,CPY,FACEZ-hz); window.__car=grp; grp.updateMatrixWorld(true); window.__cbox=new THREE.Box3().setFromObject(grp);
 },undefined,e=>console.warn('carrier failed',e));
-window.__st=stamps;window.__cam={cam,ctl};
-gl.load('./lib/stamp_qt.glb',g=>{stampSrc=g.scene; stamps.forEach((_,i)=>applyStamp(i));},undefined,e=>console.warn('stamp failed',e));
 
+const modMat=new THREE.MeshStandardMaterial({color:0x1f6f6a,roughness:.5});
+const V=(x,y,z)=>new THREE.Vector3(x,y,z);
+const MODW=0.22, MODH=0.16, MODY=PLATE_Y-0.6, MZ=-0.15;
+const modX=m=>px(Math.min(3*m+1,N-1));
+for(let m=0;m<3;m++){
+  const g=new THREE.Group(); g.position.set(modX(m),MODY,MZ);
+  g.add(new THREE.Mesh(new THREE.BoxGeometry(MODW,MODH,0.02),modMat));
+  const ch=new THREE.Mesh(new THREE.BoxGeometry(0.05,0.05,0.02),dark); ch.position.set(0,0,0.02); g.add(ch);
+  scene.add(g);
+}
 function cyl(a,b,r,m,g){
   const d=new THREE.Vector3().subVectors(b,a),L=d.length();
   const c=new THREE.Mesh(new THREE.CylinderGeometry(r,r,L,10),m);
@@ -187,45 +185,24 @@ function cyl(a,b,r,m,g){
   c.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),d.clone().normalize());
   c.castShadow=true; g.add(c); return L;
 }
-function path(i){
-  const x=px(i),y=rowY(i),z=-0.15,xb=slotX(i),sy=slotY,tipZ=FACEZ+STAMP_LEN;
-  if(mode==='A') return [[x,PLATE_Y-0.12,z],[x,y,z],[xb,y,z],[xb,sy,z],[xb,sy,FACEZ+0.02]].map(a=>new THREE.Vector3(...a));
-  return [[x,PLATE_Y,-0.02],[x,PLATE_Y,z],[x,y,z],[xb,y,z],[xb,TOPY+0.2,z],[xb,TOPY+0.2,tipZ],[xb,sy,tipZ]].map(a=>new THREE.Vector3(...a));
-}
 const info=[];
 function rebuild(){
   cableGroup.clear(); info.length=0;
+  const g=cableGroup;
+  const seg=(P,r,m,lab)=>{let l=0;for(let k=0;k<P.length-1;k++){l+=cyl(P[k],P[k+1],r,m,g);
+    if(lab){cyl(P[k],P[k+1],Math.max(r,0.03),hitMat,g);g.children[g.children.length-1].userData.wire=lab;}}return l;};
   for(let i=0;i<N;i++){
-    const pts=path(i); let L=0;
-    const g=new THREE.Group(); cableGroup.add(g);
-    const E='E'+(i+1)+': ';
-    const seg=(P,r,m,o,lab)=>{let l=0;for(let k=0;k<P.length-1;k++){const a=P[k].clone().add(o),b=P[k+1].clone().add(o);l+=cyl(a,b,r,m,g);
-      if(lab){cyl(a,b,Math.max(r,0.03),hitMat,g);g.children[g.children.length-1].userData.wire=E+lab;}}return l;};
-    const off=k=>new THREE.Vector3(k*0.07,0,k*0.07);
-    if(mode==='A'){
-      const xs=px(i),ys=rowY(i),xb=slotX(i),sy=slotY,PD=0.0098,CP=0.013,SY=PLATE_Y-0.12,ZP=-0.142;
-      const V=(x,y,z)=>new THREE.Vector3(x,y,z);
-      // sense lead: plate to the electrode terminal at the far end of the stamp
-      seg([V(xs,PLATE_Y,0.0),V(xs,PLATE_Y,-0.15),V(xs+0.017,PLATE_Y,-0.15),V(xs+0.017,SY+0.226,-0.15)],0.009,WS,new THREE.Vector3(),'sense lead (blue). Plate to the stamp electrode terminal, about 2 in, about 5 pF.');
-      // [mat, label, stamp pad index (-1..+3 -> x offset in pads), carrier pad x]
-      const W=[[W3,'3V3 wire (red). Carrier 3.3 V pad to the stamp 3V3 pad.',-1],[WO,'OUT wire (green). Stamp OUT pad to a carrier GPIO pad, digital 3.3 V, active high.',1],[WG,'GND wire (black). Stamp GND pad to the carrier GND pad. This is the ground reference.',3]];
-      W.forEach((w,j)=>{
-        const sx=xs+w[2]*PD, cx=xb+w[2]*CP, lx=xs+0.12+0.05*j, yl=ys+0.04*(j-1);
-        const q=[V(sx,SY,ZP),V(sx,SY-0.07,ZP),V(lx,SY-0.07,-0.15),V(lx,yl,-0.15),V(cx,yl,-0.15),V(cx,sy,-0.15),V(cx,sy,FACEZ+0.01)];
-        const l=seg(q,0.009,w[0],new THREE.Vector3(),w[1]); if(j===0) L=l;
-      });
-    } else {
-      L=seg(pts,0.007,WS,new THREE.Vector3(),'centre conductor (blue). Plate to the stamp electrode terminal. Carries 30 pF per foot.');
-      const sh=pts.slice(1);            // shield starts 0.15 ft past the plate: plate end open
-      seg(sh,0.03,shieldMat,new THREE.Vector3(),'shield (grey sleeve). Tied to stamp GND at the stamp end only. Plate end is open.');
-      const e=sh[sh.length-1];          // drain wire: shield to stamp GND at the stamp end
-      cyl(e,e.clone().add(new THREE.Vector3(0.05,-0.12,0)),0.008,WG,g); cyl(e,e.clone().add(new THREE.Vector3(0.05,-0.12,0)),0.03,hitMat,g); g.children[g.children.length-1].userData.wire=E+'drain wire (black). Shield to stamp GND at the stamp end.';
-      const cap=new THREE.Mesh(new THREE.TorusGeometry(0.03,0.006,6,14),WG);   // open shield end near the plate
-      cap.position.copy(sh[0]); cap.rotation.x=Math.PI/2; g.add(cap);
-    }
-    stamps[i].position.set(...(mode==='A'?[px(i),PLATE_Y-0.12,-0.15]:[slotX(i),slotY,FACEZ]));
-    applyStamp(i);
-    info.push({lead:mode==='A'?0.17:L, run:L});
+    const m=MOD(i), j=i-3*m, xp=px(i), xm=modX(m);
+    const yb=MODY+MODH/2+0.1+0.04*j;                      // each lead gets its own horizontal lane
+    const P=[V(xm+(j-1)*0.06,MODY+MODH/2,MZ),V(xm+(j-1)*0.06,yb,MZ),V(xp,yb,MZ),V(xp,PLATE_Y-PLATE/2,PZ)];
+    const L=seg(P,0.008,WS,'E'+(i+1)+' sense lead (blue). Plate to CAP1203 module channel CS'+(j+1)+'. Keep it short.');
+    info.push({mod:m+1,ch:j+1,lead:L});
+  }
+  for(let m=0;m<3;m++){
+    const t=tw(...TERM[m]), xm=modX(m), ty=2.0+0.15*m, xt=t.x+0.07*m, zc=-0.2+0.0*m;
+    const P=[V(xm,MODY-MODH/2,MZ),V(xm,ty,MZ),V(xt,ty,MZ),V(xt,t.y,MZ),V(xt,t.y,FACEZ)];
+    seg(P,0.03,shieldMat,'Module '+(m+1)+' cable (grey sleeve). 6 conductors: 3V3, GND, SDA, SCL, INT, SHIELD. To carrier terminal J'+(4+m)+', mux channel '+m+'.');
+    seg(P,0.008,WG,null);
   }
   fillTable(); diagram(); paint();
 }
@@ -237,26 +214,19 @@ function fillTable(){
   const tb=document.querySelector('#tbl tbody'); tb.innerHTML='';
   info.forEach((o,i)=>{
     const c=o.lead*30, tr=document.createElement('tr');
-    tr.innerHTML=`<td>E${i+1}</td><td>${o.lead.toFixed(1)} ft</td><td>${o.run.toFixed(1)} ft</td><td class="${c>60?'bad':'good'}">${c.toFixed(0)} pF</td>`;
+    tr.innerHTML=`<td>E${i+1}</td><td>M${o.mod}.${o.ch}</td><td>${o.lead.toFixed(1)} ft</td><td>6-core</td><td class="${c>50?'bad':'good'}">${c.toFixed(0)} pF</td>`;
     tr.onclick=()=>{sel=i;paint();}; tb.appendChild(tr);
   });
 }
 function diagram(){
-  const A=`<svg viewBox="0 0 380 190" role="img" aria-label="Option A wiring">
-  <rect x="10" y="60" width="70" height="70" fill="#b4745a" stroke="#111c27" stroke-width="2"/><text x="14" y="52">PLATE 4in</text><text x="22" y="100">copper</text>
-  <line x1="80" y1="95" x2="140" y2="95" stroke="#1a5fe0" stroke-width="3"/><text x="82" y="82">2in lead</text>
-  <rect x="140" y="55" width="70" height="80" fill="#2c4a66" stroke="#111c27" stroke-width="2"/><text x="150" y="48">STAMP</text><text x="148" y="90">electrode</text><text x="148" y="108">terminal</text>
-  <line x1="210" y1="75" x2="300" y2="75" stroke="#e0182d" stroke-width="2"/><line x1="210" y1="95" x2="300" y2="95" stroke="#12a150" stroke-width="2"/><line x1="210" y1="115" x2="300" y2="115" stroke="#000" stroke-width="2"/>
-  <text x="222" y="70">3V3</text><text x="222" y="90">OUT</text><text x="222" y="130">GND</text>
-  <rect x="300" y="45" width="70" height="100" fill="#6c8aa6" stroke="#111c27" stroke-width="2"/><text x="304" y="38">CARRIER</text><text x="312" y="98">slot</text>
-  <text x="10" y="170">Up to 12 ft of 3-wire cable is fine for a digital level.</text></svg>`;
-  const B=`<svg viewBox="0 0 380 190" role="img" aria-label="Option B wiring">
-  <rect x="10" y="60" width="70" height="70" fill="#b4745a" stroke="#111c27" stroke-width="2"/><text x="14" y="52">PLATE 4in</text>
-  <line x1="80" y1="95" x2="290" y2="95" stroke="#1a5fe0" stroke-width="2"/><rect x="100" y="89" width="190" height="12" rx="6" fill="#8a9aa8" fill-opacity=".45" stroke="#4d5c6b"/>
-  <text x="84" y="84">open</text><path d="M286 101 L286 128 L300 128" stroke="#111c27" fill="none" stroke-width="2"/><text x="150" y="80">shield, tied to GND at stamp end only</text><text x="100" y="125">centre wire to plate, 30 pF per foot</text>
-  <rect x="290" y="45" width="80" height="100" fill="#6c8aa6" stroke="#111c27" stroke-width="2"/><text x="294" y="38">CARRIER</text><rect x="305" y="75" width="50" height="40" fill="#2c4a66" stroke="#111c27" stroke-width="2"/><text x="312" y="100">stamp</text>
-  <text x="10" y="170">Plate end of shield open. Cable adds far more C than a touch.</text></svg>`;
-  document.getElementById('diag').innerHTML=mode==='A'?A:B;
+  document.getElementById('diag').innerHTML=`<svg viewBox="0 0 380 190" role="img" aria-label="CAP1203 wiring">
+  <rect x="10" y="30" width="36" height="36" fill="#b4745a" stroke="#111c27" stroke-width="2"/><rect x="10" y="78" width="36" height="36" fill="#b4745a" stroke="#111c27" stroke-width="2"/><rect x="10" y="126" width="36" height="36" fill="#b4745a" stroke="#111c27" stroke-width="2"/>
+  <text x="14" y="24">3 PLATES</text>
+  <path d="M46 48 H110 V84 H130 M46 96 H130 M46 144 H110 V108 H130" stroke="#1a5fe0" stroke-width="3" fill="none"/><text x="52" y="90">sense</text>
+  <rect x="130" y="70" width="80" height="52" fill="#1f6f6a" stroke="#111c27" stroke-width="2"/><text x="136" y="64">CAP1203</text><text x="144" y="101">CS1-3</text>
+  <rect x="210" y="86" width="90" height="12" rx="6" fill="#8a9aa8" fill-opacity=".45" stroke="#4d5c6b"/><text x="214" y="78">6-core shielded</text>
+  <rect x="300" y="45" width="70" height="100" fill="#6c8aa6" stroke="#111c27" stroke-width="2"/><text x="304" y="38">CARRIER</text><text x="308" y="92">J4..J6</text><text x="308" y="110">to mux</text>
+  <text x="10" y="180">3V3 GND SDA SCL INT SHIELD. Shield grounded at carrier end.</text></svg>`;
 }
 
 // people
@@ -275,19 +245,31 @@ new GLTFLoader().load('./lib/Xbot.glb',g=>{
   addTag('adult 5 ft 9 in',5.0,6.1,2.6,'dim'); addTag('child 4 ft',9.3,4.35,2.1,'dim');
 },undefined,e=>console.warn('model failed',e));
 
+// glass cubes standing on the squares drawn in wall.svg (square centre y=4522 in svg units, about 1.1 ft)
+const GS=1.1, GY=VCY+VH/2-4522/SVGH*VH;
+const glassMat=new THREE.MeshPhysicalMaterial({color:0xcfe8ee,transparent:true,opacity:0.28,roughness:0.04,metalness:0,clearcoat:1,clearcoatRoughness:0.03,side:THREE.DoubleSide,depthWrite:false});
+const glassEdge=new THREE.LineBasicMaterial({color:0x2f6f7e});
+const glassCubes=[];
+for(let i=0;i<N;i++){
+  const g=new THREE.Group(); g.position.set(px(i),GY,0.012+GS/2);
+  const geo=new THREE.BoxGeometry(GS,GS,GS);
+  const m=new THREE.Mesh(geo,glassMat); m.renderOrder=2; g.add(m);
+  g.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo),glassEdge));
+  scene.add(g); glassCubes.push(g);
+}
+
 // tags
 const tags=[];
 function addTag(txt,x,y,z,cls,e){const el=document.createElement('div');el.className='tag '+(cls||'');el.textContent=txt;stage.appendChild(el);tags.push({el,p:new THREE.Vector3(x,y,z),e});}
-for(let i=0;i<N;i++) addTag('E'+(i+1),px(i),PLATE_Y+0.35,0.05,'',i);
-addTag('carrier 8x8 (shown 4x)',1.1,TOPY+0.55,0.1,'dim');
-addTag('14 ft',7,-0.1,1.5,'dim'); addTag('8 ft',-0.7,4,0,'dim'); addTag('4.5 ft',14.8,2.25,0,'dim'); addTag('2 ft',2,4.9,0,'dim');
+for(let i=0;i<N;i++) addTag('E'+(i+1),px(i),PLATE_Y-0.34,0.05,'',i);
+for(let m=0;m<3;m++) addTag('M'+(m+1),modX(m),MODY-MODH/2-0.12,MZ+0.05,'dim');
+addTag('carrier cap1203 (true size)',CPX+0.2,CPY+0.35,FACEZ,'dim');
+addTag('14 ft',7,-0.1,1.5,'dim'); addTag('8 ft',-0.7,4,0,'dim'); addTag(PLATE_Y.toFixed(1)+' ft',14.8,PLATE_Y/2,0,'dim'); addTag('1.8 ft',(px(0)+px(1))/2,PLATE_Y+0.35,0,'dim');
 {const m=new THREE.LineBasicMaterial({color:0x4d5c6b});
  const L=(a,b)=>scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(...a),new THREE.Vector3(...b)]),m));
- L([0,-0.2,1.2],[14,-0.2,1.2]); L([-0.35,0,0.05],[-0.35,8,0.05]); L([14.4,0,0.05],[14.4,4.5,0.05]); L([1,5.0,0.05],[3,5.0,0.05]);}
+ L([0,-0.2,1.2],[14,-0.2,1.2]); L([-0.35,0,0.05],[-0.35,8,0.05]); L([14.4,0,0.05],[14.4,PLATE_Y,0.05]); L([px(0),PLATE_Y+0.2,0.05],[px(1),PLATE_Y+0.2,0.05]);}
 
 // ui
-document.querySelectorAll('input[name=m]').forEach(r=>r.onchange=()=>{mode=r.value;
-  document.getElementById('oA').classList.toggle('on',mode==='A');document.getElementById('oB').classList.toggle('on',mode==='B');rebuild();});
 // vinyl on the wall front face
 const vinMat=new THREE.MeshBasicMaterial({transparent:true,side:THREE.DoubleSide,depthWrite:false});
 const vin=new THREE.Mesh(new THREE.PlaneGeometry(1,1),vinMat); vin.position.z=0.006; vin.renderOrder=0; vin.visible=false; scene.add(vin);
@@ -298,20 +280,24 @@ function vLay(){
   vin.scale.set(w,h,1); vin.position.x=+$('vxp').value; vin.position.y=+$('vyp').value; vinMat.opacity=$('va').value/100;
 }
 ['vw','vxp','vyp','va'].forEach(i=>$(i).oninput=vLay);
-$('vf').onchange=e=>{
-  const f=e.target.files[0]; if(!f) return;
-  const url=URL.createObjectURL(f), img=new Image();
-  img.onload=()=>{
-    const iw=img.naturalWidth||1024, ih=img.naturalHeight||Math.round(iw*0.75), sc=Math.min(2048/Math.max(iw,ih),4);
-    const cv=document.createElement('canvas'); cv.width=Math.max(1,Math.round(iw*sc)); cv.height=Math.max(1,Math.round(ih*sc));
-    cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
-    const t=new THREE.CanvasTexture(cv); t.colorSpace=THREE.SRGBColorSpace; t.anisotropy=8;
-    if(vinMat.map) vinMat.map.dispose(); vinMat.map=t; vinMat.needsUpdate=true;
-    vAsp=cv.width/cv.height; vin.visible=true; $('vx').disabled=false; vLay(); URL.revokeObjectURL(url);
-  };
-  img.onerror=()=>{document.querySelector('.vin .hint').textContent='Could not read that image. Use SVG, PNG or JPG.'; URL.revokeObjectURL(url);};
-  img.src=url; e.target.value='';
-};
+function useImg(img,url){
+  const iw=img.naturalWidth||1024, ih=img.naturalHeight||Math.round(iw*SVGH/SVGW), sc=Math.min(Math.min(renderer.capabilities.maxTextureSize,8192)/Math.max(iw,ih),8);
+  const cv=document.createElement('canvas'); cv.width=Math.max(1,Math.round(iw*sc)); cv.height=Math.max(1,Math.round(ih*sc));
+  cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+  const t=new THREE.CanvasTexture(cv); t.colorSpace=THREE.SRGBColorSpace; t.anisotropy=renderer.capabilities.getMaxAnisotropy(); t.generateMipmaps=true; t.minFilter=THREE.LinearMipmapLinearFilter;
+  if(vinMat.map) vinMat.map.dispose(); vinMat.map=t; vinMat.needsUpdate=true;
+  vAsp=cv.width/cv.height; vin.visible=true; $('vx').disabled=false; vLay(); if(url) URL.revokeObjectURL(url);
+}
+function loadVin(url,revoke){
+  const img=new Image();
+  img.onload=()=>useImg(img,revoke?url:null);
+  img.onerror=()=>{document.querySelector('.vin .hint').textContent='Could not read that image. Use SVG, PNG or JPG.'; if(revoke) URL.revokeObjectURL(url);};
+  img.src=url;
+}
+$('vf').onchange=e=>{const f=e.target.files[0]; if(!f) return; loadVin(URL.createObjectURL(f),true); e.target.value='';};
+$('xr').onchange=e=>{$('va').value=e.target.checked?45:100; vLay();};
+$('va').addEventListener('input',()=>{$('xr').checked=+$('va').value<100;});
+loadVin('./wall.svg',false);
 $('vx').onclick=()=>{vin.visible=false; $('vx').disabled=true; if(vinMat.map){vinMat.map.dispose(); vinMat.map=null; vinMat.needsUpdate=true;}};
 window.__vin={vin,vLay};
 document.getElementById('see').onchange=e=>{wallMat.opacity=e.target.checked?.22:.95;wallMat.depthWrite=!e.target.checked;wallMat.needsUpdate=true;};
